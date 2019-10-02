@@ -15,7 +15,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
-
 namespace GF_macro
 {
     /// <summary>
@@ -24,7 +23,6 @@ namespace GF_macro
     public partial class MainWindow : System.Windows.Window
     {
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -32,23 +30,31 @@ namespace GF_macro
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Mat screen = null, find = null, res = null;
+            Bitmap fight=null;
             try
             {
-                Bitmap fight2_4 = new Bitmap(Environment.CurrentDirectory + "./image/2-4.png");
-                screen = OpenCvSharp.Extensions.BitmapConverter.ToMat((Bitmap)fight2_4);
-                find = OpenCvSharp.Extensions.BitmapConverter.ToMat(new Bitmap(fight2_4));
-
-                res = screen.MatchTemplate(find, TemplateMatchModes.CCoeffNormed);
-                //screen=OpenCvSharp.Extensions.BitmapConverter.ToMat((Bitmap)picturebox)
-                double min, max;
-                Cv2.MinMaxLoc(res, out min, out max);
-                MessageBox.Show(max.ToString());
+                fight = new Bitmap(@"image\2-4.png");
             }
-            catch (Exception)
+            catch
             {
                 MessageBox.Show("no image");
+                return;
             }
+            Bitmap bpm = new Bitmap(1600, 900);
+            searchImg(bpm, fight);
+        }
+        public void searchImg(Bitmap screenimg, Bitmap findimg)
+        {
+            Mat screenMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(screenimg);
+            Mat findMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(findimg);
+            Mat res = screenMat.MatchTemplate(findMat, TemplateMatchModes.CCoeffNormed);
+
+            double min, max;
+            Cv2.MinMaxLoc(res, out min, out max);
+            MessageBox.Show(max.ToString());
+            screenimg.Dispose();
+            findMat.Dispose();
+            res.Dispose();
         }
     }
 }
