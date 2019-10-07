@@ -9,20 +9,33 @@ imgloc="./images/"
 def ranclick(a):
     time.sleep(random.randrange(1,3))
     pg.click(a)
-    time.sleep(random.randrange(1,2))
+    time.sleep(random.randrange(1,5))
+    a=None
 
 
-def E24():    
+def E24():
+    imglist=["24E.png","commonFightButton.png","commandcenter.png","check.png","run"]
     try:
-        a=pg.locateCenterOnScreen(imgloc+"24E.png")
-        ranclick(a)
-        a=pg.locateCenterOnScreen(imgloc+"commonFightButton.png")
-        ranclick(a)
+        for i in imglist:
+            if i=="commandcenter.png":
+                pg.move(-170,-270)
+                pg.click()
+                time.sleep(random.randrange(3,6))
+                continue
+            elif i=="run":
+                time.sleep(random.randrange(1,4))
+                pg.click()
+            a=None
+            print(imgloc+i)
+            while True:
+                a=pg.locateCenterOnScreen(imgloc+i)
+                if a!=None:
+                    break
+            ranclick(a)
         
     except Exception as ex:
         print("no image")
         print("error :"+str(ex))
-
 class MyApp(QWidget):
 
     def __init__(self):
